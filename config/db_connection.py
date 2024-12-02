@@ -10,8 +10,6 @@ def connect_db():
       user="yeonshinkim",
       passwd="1234",
     )
-    if mydb.is_connected():
-      print("MySQL 데이터베이스에 성공적으로 연결되었습니다!")
     return mydb
   except Error as e:
     print(f"데이터베이스 연결에 실패했습니다: {e}")

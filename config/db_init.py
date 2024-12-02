@@ -15,7 +15,6 @@ def use_database(mydb):
         cursor = mydb.cursor()
         cursor.execute("USE software_club")
         cursor.close()
-        print("software_club 데이터베이스를 사용합니다.")
     except Error as e:
         print(f"데이터베이스 사용 중 오류 발생: {e}")
 
@@ -30,6 +29,5 @@ def init_database(mydb, file_path):
           cursor.execute(command.strip())
       mydb.commit()
     cursor.close()
-    print(f"{file_path} 파일이 성공적으로 실행되었습니다.")
   except Error as e:
     print(f"SQL 파일 실행 중 오류 발생: {e}")

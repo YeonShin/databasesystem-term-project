@@ -6,9 +6,7 @@ from modules.department_manager import department_manager_menu
 import os
 
 def main_menu():
-  print("==============================================\n")
-  print("====== 소프트웨어학부 학부 동아리 관리시스템 ======\n")
-  print("==============================================\n")
+
   
   mydb = connect_db()
   if mydb:
@@ -18,17 +16,25 @@ def main_menu():
     init_database(mydb, 'software_club_init.sql')
     
     while True:
+      print("========================================")
+      print("=== 소프트웨어학부 동아리 관리시스템 ===")
+      print("========================================")
       print("1. 학부관리자 모드 로그인")
       print("2. 동아리장 모드 로그인")
+      print("0. 시스템 종료\n")
       choice = input("로그인할 유형을 선택하세요: ")
       
       if choice == "1":
-        login_department_manager(mydb)  # 관리자 로그인
-        department_manager_menu(mydb)
+        if login_department_manager(mydb):  # 관리자 로그인
+          department_manager_menu(mydb)
       elif choice == "2":
-        login_club_manager(mydb)  # 동아리장 로그인
-        break
+        if login_club_manager(mydb):  # 동아리장 로그인
+          break
+      elif choice == "0":
+        print("시스템을 종료합니다.")
+        return
       else:
+        os.system("clear")
         print("잘못된 입력입니다. 다시 선택하세요.")
     
 
