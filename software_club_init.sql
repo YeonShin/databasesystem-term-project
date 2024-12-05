@@ -36,15 +36,16 @@ CREATE TABLE IF NOT EXISTS Notice (
 );
 -- 동아리실적 테이블 생성
 CREATE TABLE IF NOT EXISTS Club_Awards (
-    Club_id INT,
-    Award VARCHAR(30),
-    PRIMARY KEY (Club_id, Award),
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
+    Award_id INT AUTO_INCREMENT PRIMARY KEY,
+    Club_id INT NOT NULL,
+    Award VARCHAR(30) NOT NULL,
+    FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE CASCADE
 );
 -- 동아리활동 테이블 생성
 CREATE TABLE IF NOT EXISTS Activity (
     Activity_id INT AUTO_INCREMENT PRIMARY KEY,
     Aname VARCHAR(20) NOT NULL,
+    Activity_Date DATETIME DEFAULT CURRENT_TIMESTAMP,
     Activity_Description TEXT,
     Club_id INT,
     FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
