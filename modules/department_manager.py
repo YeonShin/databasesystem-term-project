@@ -60,10 +60,10 @@ def department_manager_menu(mydb):
         update_award(mydb)
       elif choice == "8":
         delete_award(mydb)
-      # elif choice == "9":
-      #   # 활동 정보 조회
-      # elif choice == "10":
-      #   # 예산 내역 조회
+      elif choice == "9":
+        select_activities(mydb)
+      elif choice == "10":
+        select_budget(mydb)
       elif choice == "0":
         # 뒤로가기
         os.system("clear")

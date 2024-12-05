@@ -230,7 +230,7 @@ def update_award(mydb):
     mydb.commit()
   
     os.system("clear")
-    print(f" {club['Club_Name']} 동아리의 수상 실적 {award_id}가 '{new_award}'로 수정되었습니다.")
+    print(f" {club['Club_Name']} 동아리의 수상 실적 (ID: {award_id})가 '{new_award}'로 수정되었습니다.")
     cursor.close()
 
 # 수상 실적 삭제 함수
@@ -301,3 +301,73 @@ def view_budget(mydb):
             print(f"날짜: {budget['Date']}, 금액: {budget['Amount']}, 사용처: {budget['Usage']}")
     else:
         print(f"동아리 ID {club_id}에 등록된 예산 내역이 없습니다.")
+
+# 활동 정보 조회 기능 (공통기능, 특정 동아리의 활동 정보 리스트를 조회, 동아리가 없을 시 처리 해주고)
+def select_activities(mydb):
+  cursor = mydb.cursor(dictionary=True)
+  club_id = input("활동 정보를 조회할 동아리 ID를 입력하세요: ").strip()
+  
+  # 동아리 존재 여부 확인
+  query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+  cursor.execute(query, (club_id,))
+  club = cursor.fetchone()
+  
+  if club is None:
+    os.system("clear")
+    print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+    cursor.close()
+    return
+
+  # 활동 정보 조회
+  query = """
+  SELECT Activity_id, Aname, Activity_Date, Activity_Description
+  FROM Activity WHERE Club_id = %s
+  """
+  cursor.execute(query, (club_id,))
+  activities = cursor.fetchall()
+  
+  cursor.close()
+
+  # 결과 출력
+  os.system("clear")
+  if activities:
+    print(f"\n============= {club['Club_Name']} 동아리의 활동 정보 목록 =============")
+    for activity in activities:
+      print(f"ID: {activity['Activity_id']}, 이름: {activity['Aname']}, 날짜: {activity['Activity_Date']}, 내용: {activity['Activity_Description']}")
+  else:
+    print(f"{club['Club_Name']} 동아리에 등록된 활동 정보가 없습니다.")
+
+# 예산 내역 조회 기능 (공통기능, 특정 동아리의 예산 내역 리스트를 조회,동아리가 없을 시 처리 해주고)
+def select_budget(mydb):
+  cursor = mydb.cursor(dictionary=True)
+  club_id = input("예산 내역을 조회할 동아리 ID를 입력하세요: ").strip()
+  
+  # 동아리 존재 여부 확인
+  query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+  cursor.execute(query, (club_id,))
+  club = cursor.fetchone()
+  
+  if club is None:
+    os.system("clear")
+    print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+    cursor.close()
+    return
+
+  # 예산 내역 조회
+  query = """
+  SELECT Budget_id, Date, Amount, Budget_Usage
+  FROM Budget WHERE Club_id = %s
+  """
+  cursor.execute(query, (club_id,))
+  budgets = cursor.fetchall()
+  
+  cursor.close()
+
+  # 결과 출력
+  os.system("clear")
+  if budgets:
+    print(f"\n============= {club['Club_Name']} 동아리의 예산 내역 =============")
+    for budget in budgets:
+      print(f"ID: {budget['Budget_id']}, 날짜: {budget['Date']}, 금액: {budget['Amount']}원, 사용처: {budget['Budget_Usage']}")
+  else:
+    print(f"{club['Club_Name']} 동아리에 등록된 예산 내역이 없습니다.")
