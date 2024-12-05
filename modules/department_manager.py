@@ -52,14 +52,14 @@ def department_manager_menu(mydb):
         update_club_info(mydb)
       elif choice == "4":
         delete_club(mydb)
-      # elif choice == "5":
-        # 수상 실적 등록
-      # elif choice == "6":
-      #   # 수상 실적 조회
-      # elif choice == "7":
-      #   # 수상 실적 수정
-      # elif choice == "8":
-      #   # 수상 실적 삭제
+      elif choice == "5":
+        add_award(mydb)
+      elif choice == "6":
+        select_awards(mydb)
+      elif choice == "7":
+        update_award(mydb)
+      elif choice == "8":
+        delete_award(mydb)
       # elif choice == "9":
       #   # 활동 정보 조회
       # elif choice == "10":

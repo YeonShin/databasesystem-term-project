@@ -90,17 +90,29 @@ def update_club_info(mydb):
 # 전체 동아리 조회
 def select_all_clubs(mydb):
   cursor = mydb.cursor(dictionary=True)
-  query = "SELECT * FROM Club"
+  query = """
+  SELECT 
+      Club.Club_id, Club.Club_Name, Club.Professor, Club.Location, 
+      Student.Sname AS Manager_Name, Student.Student_id AS Manager_Id
+  FROM Club
+  LEFT JOIN Student 
+  ON Club.Club_id = Student.Club_id AND Student.Role = '동아리장'
+  """
   cursor.execute(query)
   clubs = cursor.fetchall()
   cursor.close()
 
   if clubs:
     os.system("clear")
-    print("\n========= 동아리 목록 =========")
+    print("\n=================== 동아리 목록 =====================")
     for club in clubs:
-      print(f"ID: {club['Club_id']}, 이름: {club['Club_Name']}, 지도교수: {club['Professor']}, 위치: {club['Location']}")
-    print("===============================")
+      manager_info = f"동아리장: {club['Manager_Name']} (학번: {club['Manager_Id']})" if club['Manager_Name'] else "미정"
+      print(
+        f"ID: {club['Club_id']}, 이름: {club['Club_Name']}, "
+        f"지도교수: {club['Professor']}, 위치: {club['Location']}, "
+        f"동아리장: {manager_info}"
+      )
+    print("=====================================================")
   else:
     print("등록된 동아리가 없습니다.")
     
@@ -121,14 +133,171 @@ def select_club_detail(mydb):
   else:
     print("등록된 동아리가 없습니다.")
     
-# 수상 실적 등록 함수(관리자 기능, 특정 동아리에 수상 실적 컬럼을 추가한다.)
+# 수상 실적 등록 함수
+def add_award(mydb):
+  cursor = mydb.cursor(dictionary=True)
+  club_id = input("수상 실적을 등록할 동아리 ID를 입력하세요: ").strip()
+  
+  query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+  cursor.execute(query, (club_id,))
+  club = cursor.fetchone()
+  
+  if club is None:
+    os.system("clear")
+    print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+    return
+  
+  award = input("추가할 수상 실적(30자 이내)를 입력하세요: ").strip()
 
-# 수상 실적 조회 함수(관리자 기능, 특정 동아리의 수상 실적 리스트를 조회한다.)
+  query = """
+  INSERT INTO Club_Awards (Club_id, Award)
+  VALUES (%s, %s)
+  """
+  cursor.execute(query, (club_id, award))
+  mydb.commit()
 
-# 수상 실적 수정 함수(관리자 기능, 특정 동아리의 수상 실적 중 하나를 수정한다.)
+  if club:
+    os.system("clear")
+    print(f"{club['Club_Name']} 동아리에 수상 실적 '{award}'가 등록되었습니다.")
+  else:
+    os.system("clear")
+    print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+  cursor.close()
 
-# 수상 실적 삭제 함수(관리자 기능, 특정 동아리의 수상 실적 중 하나를 삭제한다.)
+# 수상 실적 조회 함수
+def select_awards(mydb):
+    cursor = mydb.cursor(dictionary=True)
+    club_id = input("수상 실적을 조회할 동아리 ID를 입력하세요: ").strip()
+    
+    query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+    cursor.execute(query, (club_id,))
+    club = cursor.fetchone()
+    
+    if club is None:
+      os.system("clear")
+      print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+      return
 
-# 활동 정보 조회(공통기능, 특정 동아리의 활동 정보 리스트를 조회한다.)
+    query = "SELECT Award_id, Award FROM Club_Awards WHERE Club_id = %s"
+    cursor.execute(query, (club_id,))
+    awards = cursor.fetchall()
+    
+    cursor.close()
+    
 
-# 예산 내역 조회(공통기능, 특정 동아리의 예산 내역 리스트를 조회한다.)
+    if awards:
+      os.system("clear")
+      print(f"\n============= {club['Club_Name']} 동아리의 수상 실적 목록 =============")
+      for idx, award in enumerate(awards, 1):
+        print(f"{idx}. ID: {award['Award_id']}, 실적내용: {award['Award']}")
+    else:
+      os.system("clear")
+      print(f"{club['Club_Name']} 동아리에 등록된 수상 실적이 없습니다.")
+
+# 수상 실적 수정 함수
+def update_award(mydb):
+    cursor = mydb.cursor(dictionary=True)
+    club_id = input("수상 실적을 수정할 동아리 ID를 입력하세요: ").strip()
+    award_id = input("수정할 기존 실적의 ID를 입력하세요: ").strip()
+    new_award = input("새로운 수상 실적을 입력하세요: ").strip()
+
+    query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+    cursor.execute(query, (club_id,))
+    club = cursor.fetchone()
+    
+    if club is None:
+      os.system("clear")
+      print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+      cursor.close()
+      return
+    
+    # 수상 실적 존재 여부 확인
+    query = "SELECT * FROM Club_Awards WHERE Club_id = %s AND Award_id = %s"
+    cursor.execute(query, (club_id, award_id))
+    award = cursor.fetchone()
+    
+    if award is None:
+      os.system("clear")
+      print(f"{club['Club_Name']} 동아리에 수상 실적 ID {award_id}가 존재하지 않습니다.")
+      cursor.close()
+      return
+
+    query = """
+    UPDATE Club_Awards SET Award = %s
+    WHERE Club_id = %s AND Award_id = %s
+    """
+    cursor.execute(query, (new_award, club_id, award_id))
+    mydb.commit()
+  
+    os.system("clear")
+    print(f" {club['Club_Name']} 동아리의 수상 실적 {award_id}가 '{new_award}'로 수정되었습니다.")
+    cursor.close()
+
+# 수상 실적 삭제 함수
+def delete_award(mydb):
+    cursor = mydb.cursor(dictionary=True)
+    club_id = input("수상 실적을 삭제할 동아리 ID를 입력하세요: ").strip()
+    award_id = input("삭제할 수상 실적의 ID를 입력하세요: ").strip()
+    
+    query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+    cursor.execute(query, (club_id,))
+    club = cursor.fetchone()
+    
+    if club is None:
+      os.system("clear")
+      print(f"동아리 ID {club_id}가 존재하지 않습니다.")
+      cursor.close()
+      return
+    
+    # 수상 실적 존재 여부 확인
+    query = "SELECT * FROM Club_Awards WHERE Club_id = %s AND Award_id = %s"
+    cursor.execute(query, (club_id, award_id))
+    award = cursor.fetchone()
+    
+    if award is None:
+      os.system("clear")
+      print(f"{club['Club_Name']} 동아리에 수상 실적 ID {award_id}가 존재하지 않습니다.")
+      cursor.close()
+      return
+
+    query = "DELETE FROM Club_Awards WHERE Club_id = %s AND Award_id = %s"
+    cursor.execute(query, (club_id, award_id))
+    mydb.commit()
+    
+    os.system("clear")
+    print(f"{club['Club_Name']} 동아리의 수상 실적 (ID: {award_id}) 이(가) 삭제되었습니다.")
+    cursor.close()
+
+# 활동 정보 조회 함수
+def select_activities(mydb):
+    cursor = mydb.cursor(dictionary=True)
+    club_id = input("활동 정보를 조회할 동아리 ID를 입력하세요: ").strip()
+
+    query = "SELECT * FROM Activity WHERE Club_id = %s"
+    cursor.execute(query, (club_id,))
+    activities = cursor.fetchall()
+    cursor.close()
+
+    if activities:
+        print(f"\n동아리 ID {club_id}의 활동 정보 목록:")
+        for activity in activities:
+            print(f"활동 이름: {activity['Aname']}, 세부 내용: {activity['Details']}")
+    else:
+        print(f"동아리 ID {club_id}에 등록된 활동 정보가 없습니다.")
+
+# 예산 내역 조회 함수
+def view_budget(mydb):
+    cursor = mydb.cursor(dictionary=True)
+    club_id = input("예산 내역을 조회할 동아리 ID를 입력하세요: ").strip()
+
+    query = "SELECT * FROM Budget WHERE Club_id = %s"
+    cursor.execute(query, (club_id,))
+    budgets = cursor.fetchall()
+    cursor.close()
+
+    if budgets:
+        print(f"\n동아리 ID {club_id}의 예산 내역 목록:")
+        for budget in budgets:
+            print(f"날짜: {budget['Date']}, 금액: {budget['Amount']}, 사용처: {budget['Usage']}")
+    else:
+        print(f"동아리 ID {club_id}에 등록된 예산 내역이 없습니다.")
