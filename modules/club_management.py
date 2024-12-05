@@ -371,3 +371,4 @@ def select_budget(mydb):
       print(f"ID: {budget['Budget_id']}, 날짜: {budget['Date']}, 금액: {budget['Amount']}원, 사용처: {budget['Budget_Usage']}")
   else:
     print(f"{club['Club_Name']} 동아리에 등록된 예산 내역이 없습니다.")
+

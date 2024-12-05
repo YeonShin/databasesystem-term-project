@@ -17,16 +17,19 @@ def main_menu():
     
     while True:
       print("========================================")
+      print("===\t\t\t\t\t===")
       print("=== 소프트웨어학부 동아리 관리시스템 ===")
-      print("========================================")
+      print("===\t\t\t\t\t===")
+      print("========================================\n")
       print("1. 학부관리자 모드 로그인")
       print("2. 동아리장 모드 로그인")
       print("0. 시스템 종료\n")
       choice = input("로그인할 유형을 선택하세요: ")
       
       if choice == "1":
-        if login_department_manager(mydb):  # 관리자 로그인
-          department_manager_menu(mydb)
+        department_manager = login_department_manager(mydb)
+        if department_manager:  # 관리자 로그인
+          department_manager_menu(mydb, department_manager['Employee_id'])
       elif choice == "2":
         if login_club_manager(mydb):  # 동아리장 로그인
           break

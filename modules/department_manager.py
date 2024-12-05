@@ -1,5 +1,6 @@
 from modules.club_management import *
 from modules.member_management import *
+from modules.notice_management import *
 import os
 
 # 관리자 로그인
@@ -14,13 +15,13 @@ def login_department_manager(mydb):
   if department_manager:
     os.system("clear")
     print(f"환영합니다, {department_manager['Ename']}님!")
-    return True
+    return department_manager
   else:
     os.system("clear")
     print("올바르지 않은 직원번호입니다.")
-    return False
+    return None
     
-def department_manager_menu(mydb):
+def department_manager_menu(mydb, manager_id):
   """
   학부 관리자 메뉴
   """
@@ -76,9 +77,8 @@ def department_manager_menu(mydb):
     elif task == "2":
       os.system("clear")
       print("============== 부원 관리 =================")
-      print("1. 전체 부원 조회\t\t2. 개별 부원 조회\n")
-      print("3. 부원 직책 변경\n")
-      print("0. 뒤로가기\n")
+      print("1. 전체 부원 조회\t\t2. 개별 부원 조회")
+      print("3. 부원 직책 변경\t\t 0. 뒤로가기\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
         view_all_members(mydb)
@@ -95,29 +95,35 @@ def department_manager_menu(mydb):
         # 잘못된 접근
         os.system("clear")
         print("잘못된 접근")
-    # elif task == "3":
-    #   print("\n==================================")
-    #   print("1. 공지사항 게시\t\t2. 공지사항 조회\n")
-    #   print("3. 공지사항 수정\t\t4. 공지사항 삭제\n")
-    #   print("0. 뒤로가기\n")
-    #   choice = input("수행하고자하는 작업을 선택하세요: ").strip()
-    #   if choice == "1":
-    #     # 공지사항 게시
-    #   elif choice == "2":
-    #     # 공지사항 조회
-    #   elif choice == "3":
-    #     # 공지사항 수정
-    #   elif choice == "4":
-    #     # 공지사항 삭제
-    #   elif choice == "0":
-    #     # 뒤로가기
-    #     continue
-    #   else:
-    #     # 잘못된 접근
+    elif task == "3":
+      os.system("clear")
+      print("============== 공지사항 관리 =================")
+      print("1. 공지사항 게시\t\t2. 공지사항 조회")
+      print("3. 공지사항 상세 조회\t\t4. 공지사항 수정")
+      print("5. 공지사항 삭제\t\t0. 뒤로가기\n")
+      choice = input("수행하고자하는 작업을 선택하세요: ").strip()
+      if choice == "1":
+        post_notice(mydb, manager_id)
+      elif choice == "2":
+        select_notices(mydb)
+      elif choice == "3":
+        select_notice_detail(mydb)
+      elif choice == "4":
+        update_notice(mydb, manager_id)
+      elif choice == "5":
+        delete_notice(mydb, manager_id)
+      elif choice == "0":
+        os.system("clear")
+        print("이전으로 돌아갑니다.")
+        continue
+      else:
+        os.system("clear")
+        print("잘못된 접근")
     elif task == "0":
       os.system("clear")
-      print("관리자 모드에서 로그아웃합니다.")
+      print("관리자 모드에서 로그아웃합니다.\n")
       break
     else:
+      os.system("clear")
       print("잘못된 입력입니다. 다시 선택하세요.")
         
