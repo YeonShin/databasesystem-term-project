@@ -11,13 +11,23 @@ def view_all_members(mydb):
   """
   cursor.execute(query, (club_id,))
   members = cursor.fetchall()
+  
+  # 해당 동아리 이름 조회
+  query = "SELECT Club_Name FROM Club WHERE Club_id = %s"
+  cursor.execute(query, (club_id,))
+  club = cursor.fetchone()
   cursor.close()
 
+  if not club:
+    print(f"동아리 ID {club_id}는 존재하지 않습니다.")
+    return
+      
   if members:
     os.system('clear')
-    print(f"\n====== 동아리 ID {club_id}의 부원 목록 ======")
+    print(f"\n====== {club['Club_Name']} 동아리의 부원 목록 ======")
     for member in members:
-      print(f"학번: {member['Student_id']}, 이름: {member['Sname']}, 학년: {member['Year']}, 직책: {member['Role']}")
+      enrollment_status = "재학중" if member["Enrollment_Status"] else "휴학중"
+      print(f"학번: {member['Student_id']}, 이름: {member['Sname']}, 학년: {member['Year']}, 연락처: {member['Phone']}, 직책: {member['Role']}, 재학여부: {enrollment_status}")
   else:
     os.system('clear')
     print("해당 동아리에 부원이 없습니다.")
@@ -39,7 +49,8 @@ def search_member_by_name(mydb):
     os.system('clear')
     print(f"\n====== 이름 '{name}' 검색 결과 ======")
     for member in members:
-      print(f"학번: {member['Student_id']}, 이름: {member['Sname']}, 동아리 ID: {member['Club_id']}, 직책: {member['Role']}")
+      enrollment_status = "재학중" if member["Enrollment_Status"] else "휴학중"
+      print(f"학번: {member['Student_id']}, 이름: {member['Sname']}, 학년: {member['Year']}, 연락처: {member['Phone']}, 소속 동아리 번호: {member['Club_id']}, 직책: {member['Role']}, 재학여부: {enrollment_status}")
   else:
     os.system('clear')
     print("해당 이름의 부원을 찾을 수 없습니다.")
@@ -93,8 +104,15 @@ def assign_club_manager(mydb):
   WHERE Student_id = %s AND Club_id = %s
   """
   cursor.execute(query, (new_student_id, club_id))
+  
+  query = """
+  SELECT Sname FROM Student WHERE Student_id = %s
+  """
+  cursor.execute(query, (new_student_id, ))
+  new_student = cursor.fetchone()
+  
   mydb.commit()
   
   os.system('clear')
-  print(f"학번 {new_student_id}가 동아리 ID {club_id}의 새로운 동아리장으로 지정되었습니다.")
+  print(f"학번 {new_student_id}({new_student['Sname']})가 동아리 ID {club_id}의 새로운 동아리장으로 지정되었습니다.")
   cursor.close()
