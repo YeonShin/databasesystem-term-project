@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS Activity (
 CREATE TABLE IF NOT EXISTS Budget (
     Budget_id INT AUTO_INCREMENT PRIMARY KEY,
     Date DATETIME NOT NULL,
-    Amount DECIMAL(10, 2) NOT NULL,
+    Amount INT NOT NULL,
     Budget_Usage VARCHAR(40),
     Club_id INT,
     FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
