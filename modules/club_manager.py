@@ -1,5 +1,7 @@
 import os
 from modules.member_management import *
+from modules.activity_management import *
+
 def login_club_manager(mydb):
   student_id = input("학번 10자리를 입력하세요: ").strip()
   cursor = mydb.cursor(dictionary=True)
@@ -74,16 +76,16 @@ def club_manager_menu(mydb, manager_id, club_id):
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
         # 신규 활동 등록
-        print("미구현")
+        create_activity(mydb, club_id)
       elif choice == "2":
         # 전체 활동 조회
-        print("미구현")
+        select_activities(mydb, club_id)
       elif choice == "3":
         # 개별 활동 조회
-        print("미구현")
+        update_activity(mydb, club_id)
       elif choice == "4":
-        # 활동 내용 수정
-        print("미구현")
+        # 활동 내용 
+        delete_activity(mydb, club_id)
       elif choice == "0":
         os.system("clear")
         print("이전으로 돌아갑니다.")
