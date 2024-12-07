@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS Club (
   Introduction TEXT,
   Main_Research VARCHAR(20)
 );
+
 -- 학부관리자 테이블 생성
 CREATE TABLE IF NOT EXISTS Department_Manager (
   Employee_id VARCHAR(8) PRIMARY KEY NOT NULL,
@@ -15,59 +16,51 @@ CREATE TABLE IF NOT EXISTS Department_Manager (
 );
 -- 학생 테이블 생성
 CREATE TABLE IF NOT EXISTS Student (
-    Student_id VARCHAR(10) PRIMARY KEY NOT NULL,
-    Sname VARCHAR(20) NOT NULL,
-    Department VARCHAR(20) NOT NULL,
-    Year INT NOT NULL CHECK (Year BETWEEN 1 AND 4),
-    Phone VARCHAR(20),
-    Role ENUM('동아리장', '일반학생') NOT NULL,
-    Enrollment_Status BOOLEAN DEFAULT TRUE,
-    Club_id INT,
-    Dmanager_id VARCHAR(8) NOT NULL,
-    FOREIGN KEY (Dmanager_id) REFERENCES Department_Manager(Employee_id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE SET NULL ON UPDATE CASCADE 
+  Student_id VARCHAR(10) PRIMARY KEY NOT NULL,
+  Sname VARCHAR(20) NOT NULL,
+  Department VARCHAR(20) NOT NULL,
+  Year INT NOT NULL CHECK (Year BETWEEN 1 AND 4),
+  Phone VARCHAR(20),
+  Role ENUM('동아리장', '일반학생') NOT NULL,
+  Enrollment_Status BOOLEAN DEFAULT TRUE,
+  Club_id INT,
+  Dmanager_id VARCHAR(8) NOT NULL,
+  FOREIGN KEY (Dmanager_id) REFERENCES Department_Manager(Employee_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE SET NULL ON UPDATE CASCADE 
 );
 -- 공지사항 테이블 생성
 CREATE TABLE IF NOT EXISTS Notice (
-    Notice_id INT AUTO_INCREMENT PRIMARY KEY,
-    Title VARCHAR(20) NOT NULL,
-    Content TEXT NOT NULL,
-    Posted_Date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Author_id VARCHAR(8),
-    FOREIGN KEY (Author_id) REFERENCES Department_Manager(Employee_id)
+  Notice_id INT AUTO_INCREMENT PRIMARY KEY,
+  Title VARCHAR(20) NOT NULL,
+  Content TEXT NOT NULL,
+  Posted_Date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  Author_id VARCHAR(8),
+  FOREIGN KEY (Author_id) REFERENCES Department_Manager(Employee_id)
 );
 -- 동아리실적 테이블 생성
 CREATE TABLE IF NOT EXISTS Club_Awards (
-    Award_id INT AUTO_INCREMENT PRIMARY KEY,
-    Club_id INT NOT NULL,
-    Award VARCHAR(30) NOT NULL,
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE CASCADE
+  Award_id INT AUTO_INCREMENT PRIMARY KEY,
+  Club_id INT NOT NULL,
+  Award_Detail VARCHAR(30) NOT NULL,
+  FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE CASCADE
 );
 -- 동아리활동 테이블 생성
-CREATE TABLE IF NOT EXISTS Activity (
-    Activity_id INT AUTO_INCREMENT PRIMARY KEY,
-    Aname VARCHAR(20) NOT NULL,
-    Activity_Date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Activity_Description TEXT,
-    Club_id INT,
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
+CREATE TABLE IF NOT EXISTS Club_Activity (
+  Activity_id INT AUTO_INCREMENT PRIMARY KEY,
+  Aname VARCHAR(20) NOT NULL,
+  Activity_Date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  Activity_Description TEXT,
+  Club_id INT,
+  FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
 );
 -- 동아리예산 테이블 생성
 CREATE TABLE IF NOT EXISTS Budget (
-    Budget_id INT AUTO_INCREMENT PRIMARY KEY,
-    Date DATETIME NOT NULL,
-    Amount INT NOT NULL,
-    Budget_Usage VARCHAR(40),
-    Club_id INT,
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
-);
--- 학부관리자-동아리 관리 관계 테이블 생성
-CREATE TABLE IF NOT EXISTS Manages (
-    Manager_id VARCHAR(8),
-    Club_id INT,
-    PRIMARY KEY (Manager_id, Club_id),
-    FOREIGN KEY (Manager_id) REFERENCES Department_Manager(Employee_id),
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
+  Budget_id INT AUTO_INCREMENT PRIMARY KEY,
+  Date DATETIME NOT NULL,
+  Amount INT NOT NULL,
+  Budget_Usage VARCHAR(40),
+  Club_id INT,
+  FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
 );
 
 

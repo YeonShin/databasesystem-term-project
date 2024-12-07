@@ -198,7 +198,7 @@ def add_award(mydb):
 
   try:
     query = """
-    INSERT INTO Club_Awards (Club_id, Award)
+    INSERT INTO Club_Awards (Club_id, Award_Detail)
     VALUES (%s, %s)
     """
     cursor.execute(query, (club_id, award))
@@ -229,7 +229,7 @@ def select_awards(mydb):
       print(f"동아리 ID {club_id}가 존재하지 않습니다.")
       return
 
-    query = "SELECT Award_id, Award FROM Club_Awards WHERE Club_id = %s"
+    query = "SELECT Award_id, Award_Detail FROM Club_Awards WHERE Club_id = %s"
     cursor.execute(query, (club_id,))
     awards = cursor.fetchall()
     
@@ -240,7 +240,7 @@ def select_awards(mydb):
       os.system("clear")
       print(f"\n============= {club['Club_Name']} 동아리의 수상 실적 목록 =============")
       for idx, award in enumerate(awards, 1):
-        print(f"{idx}. ID: {award['Award_id']}, 실적내용: {award['Award']}")
+        print(f"{idx}. ID: {award['Award_id']}, 실적내용: {award['Award_Detail']}")
     else:
       os.system("clear")
       print(f"{club['Club_Name']} 동아리에 등록된 수상 실적이 없습니다.")
@@ -273,10 +273,10 @@ def update_award(mydb):
       cursor.close()
       return
     
-    new_award = input("새로운 수상 실적을 입력하세요 [변경하지 않으려면 엔터]: ").strip() or award['Award']
+    new_award = input("새로운 수상 실적을 입력하세요 [변경하지 않으려면 엔터]: ").strip() or award['Award_Detail']
 
     query = """
-    UPDATE Club_Awards SET Award = %s
+    UPDATE Club_Awards SET Award_Detail = %s
     WHERE Club_id = %s AND Award_id = %s
     """
     cursor.execute(query, (new_award, club_id, award_id))

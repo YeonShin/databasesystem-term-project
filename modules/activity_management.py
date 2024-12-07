@@ -19,7 +19,7 @@ def create_activity(mydb, club_id):
 
   # 활동 등록 쿼리
   query = """
-  INSERT INTO Activity (Aname, Activity_Description, Club_id)
+  INSERT INTO Club_Activity (Aname, Activity_Description, Club_id)
   VALUES (%s, %s, %s)
   """
   cursor.execute(query, (activity_name, activity_description, club_id))
@@ -48,7 +48,7 @@ def select_activities(mydb, club_id = -1):
 
   # 해당 동아리의 모든 활동 조회
   query = """
-  SELECT * FROM Activity WHERE Club_id = %s
+  SELECT * FROM Club_Activity WHERE Club_id = %s
   """
   cursor.execute(query, (club_id,))
   activities = cursor.fetchall()
@@ -86,7 +86,7 @@ def select_activity_detail(mydb, club_id = -1):
   # 활동 정보 조회
   query = """
   SELECT Activity_id, Aname, Activity_Date, Activity_Description
-  FROM Activity WHERE Club_id = %s AND Activity_id = %s
+  FROM Club_Activity WHERE Club_id = %s AND Activity_id = %s
   """
   cursor.execute(query, (club_id, activity_id, ))
   activity = cursor.fetchone()
@@ -113,7 +113,7 @@ def update_activity(mydb, club_id):
 
   # 활동 존재 여부 확인
   query = """
-  SELECT * FROM Activity WHERE Activity_id = %s AND Club_id = %s
+  SELECT * FROM Club_Activity WHERE Activity_id = %s AND Club_id = %s
   """
   cursor.execute(query, (activity_id, club_id))
   activity = cursor.fetchone()
@@ -130,7 +130,7 @@ def update_activity(mydb, club_id):
 
   # 활동 정보 업데이트
   query_update = """
-  UPDATE Activity
+  UPDATE Club_Activity
   SET Aname = %s, Activity_Description = %s
   WHERE Activity_id = %s AND Club_id = %s
   """
@@ -150,7 +150,7 @@ def delete_activity(mydb, club_id):
 
   # 활동 존재 여부 확인
   query = """
-  SELECT * FROM Activity WHERE Activity_id = %s AND Club_id = %s
+  SELECT * FROM Club_Activity WHERE Activity_id = %s AND Club_id = %s
   """
   cursor.execute(query, (activity_id, club_id))
   activity = cursor.fetchone()
@@ -165,7 +165,7 @@ def delete_activity(mydb, club_id):
   confirm = input(f"활동 '{activity['Aname']}'를 삭제하시겠습니까? (y/n): ").strip().lower()
   if confirm == 'y':
     query_delete = """
-    DELETE FROM Activity WHERE Activity_id = %s AND Club_id = %s
+    DELETE FROM Club_Activity WHERE Activity_id = %s AND Club_id = %s
     """
     cursor.execute(query_delete, (activity_id, club_id))
     mydb.commit()
