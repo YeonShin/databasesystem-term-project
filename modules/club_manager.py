@@ -1,5 +1,5 @@
 import os
-from modules.member_management import view_all_members, search_member_by_name
+from modules.member_management import *
 def login_club_manager(mydb):
   student_id = input("학번 10자리를 입력하세요: ").strip()
   cursor = mydb.cursor(dictionary=True)
@@ -40,12 +40,12 @@ def club_manager_menu(mydb, manager_id, club_id):
       print("============== 부원 관리 =================")
       print("1. 신규 부원 등록\t\t2. 전체 부원 조회")
       print("3. 개별 부원 조회\t\t4. 부원 정보 수정")
-      print("5. 부원 정보 삭제")
+      print("5. 부원 탈퇴 처리")
       print("0. 뒤로가기\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
         # 신규 부원 등록 (동아리장이 관리하는 특정 동아리의 부원에 한해)
-        print("미구현")
+        add_member_to_club(mydb, club_id)
       elif choice == "2":
         # 전체 부원 조회 (동아리장이 관리하는 특정 동아리의 부원에 한해)
         view_all_members(mydb, club_id)
@@ -54,10 +54,10 @@ def club_manager_menu(mydb, manager_id, club_id):
         search_member_by_name(mydb, club_id)
       elif choice == "4":
         # 부원 정보 수정 (동아리장이 관리하는 특정 동아리의 부원에 한해, 직책은 수정 불가)
-        print("미구현")
+        update_member(mydb, club_id)
       elif choice == "5":
         # 부원 정보 삭제 (동아리장이 관리하는 특정 동아리의 부원에 한해, 삭제하면 부원이 속한 동아리가 NULL)
-        print("미구현")
+        remove_member_from_club(mydb, club_id)
       elif choice == "0":
         os.system("clear")
         print("이전으로 돌아갑니다.")

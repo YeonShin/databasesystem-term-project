@@ -1,5 +1,5 @@
 from modules.club_management import *
-from modules.member_management import *
+from modules.student_management import *
 from modules.notice_management import *
 import os
 
