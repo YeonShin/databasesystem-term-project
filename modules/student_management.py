@@ -8,7 +8,7 @@ def select_all_students(mydb):
   SELECT s.Student_id, s.Sname, s.Department, s.Year, s.Phone, s.Role, s.Enrollment_Status, 
           s.Club_id, d.Ename AS Dmanager_Name
   FROM Student s
-  INNER JOIN Department_Manager d ON s.Dmanager_id = d.Employee_id
+  INNER JOIN Department_Manager d ON s.Edited_by = d.Employee_id
   """
   cursor.execute(query)
   students = cursor.fetchall()
@@ -21,7 +21,7 @@ def select_all_students(mydb):
       enrollment_status = "재학중" if student["Enrollment_Status"] else "휴학중"
       print(f"학번: {student['Student_id']}, 이름: {student['Sname']}, 학과: {student['Department']}, 학년: {student['Year']}, "
             f"연락처: {student['Phone']}, 소속 동아리 번호: {student['Club_id']}, 직책: {student['Role']}, "
-            f"재학여부: {enrollment_status}, 최근 수정자: {student['Dmanager_Name']}")
+            f"재학여부: {enrollment_status}, 최근 수정 관리자: {student['Dmanager_Name']}")
     print("============================================================")
   else:
     os.system('clear')
@@ -38,7 +38,7 @@ def select_student_by_name(mydb):
     SELECT s.Student_id, s.Sname, s.Department, s.Year, s.Phone, s.Role, s.Enrollment_Status, 
             s.Club_id, d.Ename AS Dmanager_Name
     FROM Student s
-    INNER JOIN Department_Manager d ON s.Dmanager_id = d.Employee_id
+    INNER JOIN Department_Manager d ON s.Edited_by = d.Employee_id
     WHERE s.Sname LIKE %s
     """
     cursor.execute(query, (f"%{name}%", ))
@@ -54,7 +54,7 @@ def select_student_by_name(mydb):
         print(
             f"학번: {student['Student_id']}, 이름: {student['Sname']}, 학과: {student['Department']}, 학년: {student['Year']}, "
             f"연락처: {student['Phone']}, 소속 동아리 번호: {student['Club_id']}, 직책: {student['Role']}, "
-            f"재학여부: {enrollment_status}, 최근 수정자: {student['Dmanager_Name']}"
+            f"재학여부: {enrollment_status}, 최근 수정 관리자: {student['Dmanager_Name']}"
           )
       print("============================================================")
     else:
@@ -141,7 +141,7 @@ def create_student(mydb, dmanager_id):
 
     # INSERT 쿼리 실행
     query_insert_student = """
-    INSERT INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id)
+    INSERT INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Edited_by)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     cursor.execute(query_insert_student, (new_id, sname, department, year, phone, role, enrollment_status, club_id, dmanager_id))
@@ -193,7 +193,7 @@ def update_student(mydb, dmanager_id):
     # 학생 정보 업데이트
     query_update = """
     UPDATE Student
-    SET Sname = %s, Year = %s, Phone = %s, Enrollment_Status = %s, Club_id = %s, Dmanager_id = %s, Role = '일반학생'
+    SET Sname = %s, Year = %s, Phone = %s, Enrollment_Status = %s, Club_id = %s, Edited_by = %s, Role = '일반학생'
     WHERE Student_id = %s
     """
   else:
@@ -201,7 +201,7 @@ def update_student(mydb, dmanager_id):
     # 학생 정보 업데이트
     query_update = """
     UPDATE Student
-    SET Sname = %s, Year = %s, Phone = %s, Enrollment_Status = %s, Club_id = %s, Dmanager_id = %s
+    SET Sname = %s, Year = %s, Phone = %s, Enrollment_Status = %s, Club_id = %s, Edited_by = %s
     WHERE Student_id = %s
     """
 
@@ -292,14 +292,14 @@ def assign_club_manager(mydb, dmanager_id):
   # 기존 동아리장의 직책을 일반 부원으로 변경 (있는 경우)
   if current_manager:
     query = """
-    UPDATE Student SET Role = '일반학생', Dmanager_id = %s
+    UPDATE Student SET Role = '일반학생', Edited_by = %s
     WHERE Student_id = %s AND Club_id = %s
     """
     cursor.execute(query, (dmanager_id, current_manager['Student_id'],  club_id))
 
   # 새로운 동아리장을 지정
   query = """
-  UPDATE Student SET Role = '동아리장', Dmanager_id = %s
+  UPDATE Student SET Role = '동아리장', Edited_by = %s
   WHERE Student_id = %s AND Club_id = %s
   """
   cursor.execute(query, (dmanager_id, new_student_id, club_id))

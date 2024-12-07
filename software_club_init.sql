@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS Student (
   Role ENUM('동아리장', '일반학생') NOT NULL,
   Enrollment_Status BOOLEAN DEFAULT TRUE,
   Club_id INT,
-  Dmanager_id VARCHAR(8) NOT NULL,
-  FOREIGN KEY (Dmanager_id) REFERENCES Department_Manager(Employee_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  Edited_by VARCHAR(8) NOT NULL,
+  FOREIGN KEY (Edited_by) REFERENCES Department_Manager(Employee_id) ON DELETE RESTRICT ON UPDATE CASCADE,
   FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE SET NULL ON UPDATE CASCADE 
 );
 -- 공지사항 테이블 생성
