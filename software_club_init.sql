@@ -18,12 +18,14 @@ CREATE TABLE IF NOT EXISTS Student (
     Student_id VARCHAR(10) PRIMARY KEY NOT NULL,
     Sname VARCHAR(20) NOT NULL,
     Department VARCHAR(20) NOT NULL,
-    Year INT NOT NULL,
+    Year INT NOT NULL CHECK (Year BETWEEN 1 AND 4),
     Phone VARCHAR(20),
-    Role ENUM('동아리장', '일반부원') NOT NULL,
+    Role ENUM('동아리장', '일반학생') NOT NULL,
     Enrollment_Status BOOLEAN DEFAULT TRUE,
     Club_id INT,
-    FOREIGN KEY (Club_id) REFERENCES Club(Club_id)
+    Dmanager_id VARCHAR(8) NOT NULL,
+    FOREIGN KEY (Dmanager_id) REFERENCES Department_Manager(Employee_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (Club_id) REFERENCES Club(Club_id) ON DELETE SET NULL ON UPDATE CASCADE 
 );
 -- 공지사항 테이블 생성
 CREATE TABLE IF NOT EXISTS Notice (
@@ -83,13 +85,13 @@ INSERT IGNORE INTO Club (Club_id, Club_Name, Professor, Location, Introduction, 
 (3, 'PDA-pro', '홍장의', 'S4-1 116', 'C/C++, Android 기반 연구 동아리', 'Android');
 
 -- 학생 초기 데이터 삽입
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id) VALUES
-('2020039001', '차은우', '소프트웨어학과', 3, '010-1234-5678', '동아리장', TRUE, 1);
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id) VALUES
-('2020039010', '김연신', '소프트웨어학과', 3, '010-2345-6789', '일반부원', TRUE, 1);
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id) VALUES
-('2020039002', '손흥민', '소프트웨어학과', 3, '010-3456-7890', '동아리장', TRUE, 2);
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id) VALUES
-('2020041001', '박지성', '소프트웨어학부', 3, '010-4567-8901', '일반부원', TRUE, 1);
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id) VALUES
-('2020039003', '장원영', '소프트웨어학과', 1, '010-5678-9012', '일반부원', TRUE, 1);
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+('2020039001', '차은우', '소프트웨어학과', 3, '010-1234-5678', '동아리장', TRUE, 1, '18010001');
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+('2020039010', '김연신', '소프트웨어학과', 3, '010-2345-6789', '일반학생', TRUE, 1, '18010001');
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+('2020039002', '손흥민', '소프트웨어학과', 3, '010-3456-7890', '동아리장', TRUE, 2, '18010002');
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+('2020039003', '박지성', '소프트웨어학부', 3, '010-4567-8901', '일반학생', TRUE, 1, '18010003');
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+('2020039004', '장원영', '소프트웨어학과', 1, '010-5678-9012', '일반학생', TRUE, 1, '18010001');

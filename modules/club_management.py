@@ -35,7 +35,7 @@ def delete_club(mydb):
     return
   club_name = club['Club_Name']
   
-  # 동아리 삭제
+  # 동아리 삭제 (참조 무결성 문제에 대한 예외 처리 필요)
   query = "DELETE FROM Club WHERE Club_id = %s"
   cursor.execute(query, (club_id,))
   mydb.commit()
@@ -126,9 +126,11 @@ def select_club_detail(mydb):
 
   if clubs:
     os.system("clear")
-    print("\n========= 동아리 목록 =========")
+    print("\n========= 동아리 상세 정보 =========")
     for club in clubs:
       print(f"ID: {club['Club_id']}, 이름: {club['Club_Name']}, 지도교수: {club['Professor']}, 위치: {club['Location']}")
+      print(f"동아리 소개: {club['Introduction']}")
+      print(f"연구주제: {club['Main_Research']}")
     print("===============================")
   else:
     print("등록된 동아리가 없습니다.")

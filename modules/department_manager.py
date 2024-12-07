@@ -28,7 +28,7 @@ def department_manager_menu(mydb, manager_id):
   while True:
     print("\n======= 학부 관리자 모드 =======")
     print("1. 동아리 관리")
-    print("2. 부원 관리")
+    print("2. 학생 관리")
     print("3. 공지사항 관리")
     print("0. 종료\n")
     
@@ -37,33 +37,34 @@ def department_manager_menu(mydb, manager_id):
     if task == "1":
       os.system("clear")
       print("============== 동아리 관리 =================")
-      print("1. 동아리 개설\t\t\t2. 전체 동아리 조회")
-      print("3. 기본 정보 수정\t\t4. 동아리 삭제")
-      print("5. 수상 실적 등록\t\t6. 수상 실적 조회")
-      print("7. 수상 실적 수정\t\t8. 수상 실적 삭제")
-      print("9. 활동 정보 조회\t\t10. 예산 내역 조회")
-      print("0. 뒤로가기\n")
+      print("1. 동아리 생성\t\t\t2. 동아리 목록 조회")
+      print("3. 상세 정보 조회\t\t4. 동아리 정보 수정")
+      print("5. 동아리 삭제\t\t6. 수상 실적 등록")
+      print("7. 수상 실적 조회\t\t8. 수상 실적 수정")
+      print("9. 수상 실적 삭제\t\t10. 활동 정보 조회")
+      print("11. 예산 내역 조회\t\t0. 뒤로가기\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
-        # 동아리 개설
         create_club(mydb)
       elif choice == "2":
         select_all_clubs(mydb)
       elif choice == "3":
-        update_club_info(mydb)
+        select_club_detail(mydb)
       elif choice == "4":
-        delete_club(mydb)
+        update_club_info(mydb)
       elif choice == "5":
-        add_award(mydb)
+        delete_club(mydb)
       elif choice == "6":
-        select_awards(mydb)
+        add_award(mydb)
       elif choice == "7":
-        update_award(mydb)
+        select_awards(mydb)
       elif choice == "8":
-        delete_award(mydb)
+        update_award(mydb)
       elif choice == "9":
-        select_activities(mydb)
+        delete_award(mydb)
       elif choice == "10":
+        select_activities(mydb)
+      elif choice == "11":
         select_budget(mydb)
       elif choice == "0":
         # 뒤로가기
@@ -76,16 +77,24 @@ def department_manager_menu(mydb, manager_id):
         print("잘못된 접근")
     elif task == "2":
       os.system("clear")
-      print("============== 부원 관리 =================")
-      print("1. 전체 부원 조회\t\t2. 개별 부원 조회")
-      print("3. 부원 직책 변경\t\t 0. 뒤로가기\n")
+      print("============== 학생 관리 =================")
+      print("1. 전체 학생 조회\t\t2. 개별 학생 조회")
+      print("3. 학생 직책 변경\t\t 4. 학생 정보 등록")
+      print("5. 학생 정보 수정\t\t 6. 학생 정보 삭제")
+      print("0. 뒤로가기\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
-        view_all_members(mydb)
+        select_all_students(mydb)
       elif choice == "2":
-        search_member_by_name(mydb)
+        select_student_by_name(mydb)
       elif choice == "3":
         assign_club_manager(mydb)
+      elif choice == "4":
+        create_student(mydb, manager_id)
+      elif choice == "5":
+        update_student(mydb, manager_id)
+      elif choice == "6":
+        delete_student(mydb)
       elif choice == "0":
         # 뒤로가기
         os.system("clear")

@@ -1,13 +1,11 @@
 from config.db_connection import connect_db
 from config.db_init import create_database_if_not_exists, use_database, init_database
 from modules.department_manager import login_department_manager
-from modules.club_manager import login_club_manager
+from modules.club_manager import login_club_manager, club_manager_menu
 from modules.department_manager import department_manager_menu
 import os
 
 def main_menu():
-
-  
   mydb = connect_db()
   if mydb:
     create_database_if_not_exists(mydb)
@@ -31,8 +29,9 @@ def main_menu():
         if department_manager:  # 관리자 로그인
           department_manager_menu(mydb, department_manager['Employee_id'])
       elif choice == "2":
-        if login_club_manager(mydb):  # 동아리장 로그인
-          break
+        club_manager = login_club_manager(mydb)
+        if club_manager:  # 동아리장 로그인
+          club_manager_menu(mydb, club_manager['Student_id'], club_manager['Club_id'])
       elif choice == "0":
         print("시스템을 종료합니다.")
         return
