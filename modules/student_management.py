@@ -245,7 +245,7 @@ def delete_student(mydb):
   cursor.close()
 
 # 동아리장 지정 기능 (학부관리자 기능)
-def assign_club_manager(mydb):
+def assign_club_manager(mydb, dmanager_id):
   cursor = mydb.cursor(dictionary=True)
   club_id = input("동아리 고유번호를 입력하세요: ").strip()
   
@@ -292,17 +292,17 @@ def assign_club_manager(mydb):
   # 기존 동아리장의 직책을 일반 부원으로 변경 (있는 경우)
   if current_manager:
     query = """
-    UPDATE Student SET Role = '일반학생'
+    UPDATE Student SET Role = '일반학생', Dmanager_id = %s
     WHERE Student_id = %s AND Club_id = %s
     """
-    cursor.execute(query, (current_manager['Student_id'], club_id))
+    cursor.execute(query, (dmanager_id, current_manager['Student_id'],  club_id))
 
   # 새로운 동아리장을 지정
   query = """
-  UPDATE Student SET Role = '동아리장'
+  UPDATE Student SET Role = '동아리장', Dmanager_id = %s
   WHERE Student_id = %s AND Club_id = %s
   """
-  cursor.execute(query, (new_student_id, club_id))
+  cursor.execute(query, (dmanager_id, new_student_id, club_id))
   
   query = """
   SELECT Sname FROM Student WHERE Student_id = %s

@@ -94,7 +94,7 @@ def department_manager_menu(mydb, manager_id):
       elif choice == "2":
         select_student_by_name(mydb)
       elif choice == "3":
-        assign_club_manager(mydb)
+        assign_club_manager(mydb, manager_id)
       elif choice == "4":
         create_student(mydb, manager_id)
       elif choice == "5":
