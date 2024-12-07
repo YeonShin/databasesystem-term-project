@@ -19,6 +19,22 @@ def use_database(mydb):
         print(f"데이터베이스 사용 중 오류 발생: {e}")
 
 def init_database(mydb, file_path):
+  cursor = mydb.cursor()
+
+  # 데이터베이스에 테이블 존재 여부 확인
+  query = """
+  SELECT COUNT(*) 
+  FROM INFORMATION_SCHEMA.TABLES 
+  WHERE TABLE_SCHEMA = DATABASE()
+  """
+  cursor.execute(query)
+  result = cursor.fetchone()
+
+  # 데이터베이스에 테이블이 하나라도 존재하면 SQL 파일 실행하지 않음
+  if result[0] > 0:
+      cursor.close()
+      return
+
   try:
     cursor = mydb.cursor()
     with open(file_path, 'r') as sql_file:

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS Club (
   Club_Name VARCHAR(20) NOT NULL,
   Professor VARCHAR(20),
   Location VARCHAR(10),
-  Introduction VARCHAR(20),
+  Introduction TEXT,
   Main_Research VARCHAR(20)
 );
 -- 학부관리자 테이블 생성
