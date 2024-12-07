@@ -1,6 +1,8 @@
 import os
 from modules.member_management import *
 from modules.activity_management import *
+from modules.budget_management import *
+from modules.notice_management import *
 
 def login_club_manager(mydb):
   student_id = input("학번 10자리를 입력하세요: ").strip()
@@ -101,17 +103,13 @@ def club_manager_menu(mydb, manager_id, club_id):
       print("0. 뒤로가기\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
-        # 신규 예산내역 등록
-        print("미구현")
+        create_budget(mydb, club_id)
       elif choice == "2":
-        # 예산내역 조회
-        print("미구현")
+        select_budgets(mydb, club_id)
       elif choice == "3":
-        # 예산내역 수정
-        print("미구현")
+        update_budget(mydb, club_id)
       elif choice == "4":
-        # 예산내역 삭제
-        print("미구현")
+        delete_budget(mydb, club_id)
       elif choice == "0":
         os.system("clear")
         print("이전으로 돌아갑니다.")
@@ -126,11 +124,9 @@ def club_manager_menu(mydb, manager_id, club_id):
       print("0. 뒤로가기\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
-        # 공지사항 목록 조회
-        print("미구현")
+        select_notices(mydb)
       elif choice == "2":
-        # 공지사항 상세 조회
-        print("미구현")
+        select_notice_detail(mydb)
       elif choice == "0":
         os.system("clear")
         print("이전으로 돌아갑니다.")
