@@ -1,8 +1,8 @@
 from config.db_connection import connect_db
 from config.db_init import create_database_if_not_exists, use_database, init_database
-from modules.department_manager import login_department_manager
-from modules.club_manager import login_club_manager, club_manager_menu
-from modules.department_manager import department_manager_menu
+from modules.department_manager.department_manager import login_department_manager
+from modules.club_manager.club_manager import login_club_manager, club_manager_menu
+from modules.department_manager.department_manager import department_manager_menu
 import os
 
 def main_menu():

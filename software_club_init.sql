@@ -78,13 +78,14 @@ INSERT IGNORE INTO Club (Club_id, Club_Name, Professor, Location, Introduction, 
 (3, 'PDA-pro', '홍장의', 'S4-1 116', 'C/C++, Android 기반 연구 동아리', 'Android');
 
 -- 학생 초기 데이터 삽입
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Edited_by) VALUES
 ('2020039001', '차은우', '소프트웨어학과', 3, '010-1234-5678', '동아리장', TRUE, 1, '18010001');
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
-('2020039010', '김연신', '소프트웨어학과', 3, '010-2345-6789', '일반학생', TRUE, 1, '18010001');
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Edited_by) VALUES
 ('2020039002', '손흥민', '소프트웨어학과', 3, '010-3456-7890', '동아리장', TRUE, 2, '18010002');
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Edited_by) VALUES
 ('2020039003', '박지성', '소프트웨어학부', 3, '010-4567-8901', '일반학생', TRUE, 1, '18010003');
-INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Dmanager_id) VALUES
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Edited_by) VALUES
 ('2020039004', '장원영', '소프트웨어학과', 1, '010-5678-9012', '일반학생', TRUE, 1, '18010001');
+INSERT IGNORE INTO Student (Student_id, Sname, Department, Year, Phone, Role, Enrollment_Status, Club_id, Edited_by) VALUES
+('2020039010', '김연신', '소프트웨어학과', 3, '010-2345-6789', '일반학생', TRUE, 1, '18010001');
+

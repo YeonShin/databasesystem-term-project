@@ -1,8 +1,8 @@
-from modules.club_management import *
-from modules.student_management import *
-from modules.notice_management import *
-from modules.activity_management import select_activities, select_activity_detail
-from modules.budget_management import select_budgets
+from modules.department_manager.club_management import *
+from modules.department_manager.student_management import *
+from modules.department_manager.notice_management import *
+from modules.club_manager.activity_management import select_activities, select_activity_detail
+from modules.club_manager.budget_management import select_budgets
 import os
 
 # 관리자 로그인

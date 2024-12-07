@@ -1,8 +1,8 @@
 import os
-from modules.member_management import *
-from modules.activity_management import *
-from modules.budget_management import *
-from modules.notice_management import *
+from modules.club_manager.member_management import *
+from modules.club_manager.activity_management import *
+from modules.club_manager.budget_management import *
+from modules.department_manager.notice_management import *
 
 def login_club_manager(mydb):
   student_id = input("학번 10자리를 입력하세요: ").strip()

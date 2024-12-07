@@ -167,18 +167,30 @@ def select_club_detail(mydb):
   query = "SELECT * FROM Club WHERE Club_id = %s"
   cursor.execute(query, (club_id, ))
   club = cursor.fetchone()
-  cursor.close()
-
-  if club:
-    os.system("clear")
-    print("\n========= 동아리 상세 정보 =========")
-    print(f"ID: {club['Club_id']}, 이름: {club['Club_Name']}, 지도교수: {club['Professor']}, 위치: {club['Location']}")
-    print(f"동아리 소개: {club['Introduction']}")
-    print(f"연구주제: {club['Main_Research']}")
-    print("===============================")
-  else:
+  
+  if not club:
     os.system("clear")
     print("등록된 동아리가 없습니다.")
+    cursor.close()
+    return
+      
+  query_member_count = """
+  SELECT COUNT(*) AS Member_Count 
+  FROM Student 
+  WHERE Club_id = %s
+  """
+  cursor.execute(query_member_count, (club_id,))
+  member_count = cursor.fetchone()["Member_Count"]
+  
+  cursor.close()
+
+  os.system("clear")
+  print("\n=================== 동아리 상세 정보 =====================")
+  print(f"ID: {club['Club_id']}, 이름: {club['Club_Name']}, 지도교수: {club['Professor']}, 위치: {club['Location']}")
+  print(f"동아리 소개: {club['Introduction']}")
+  print(f"연구주제: {club['Main_Research']}")
+  print(f"부원의 수: {member_count}명")
+  print("=====================================================")
     
 # (학부 관리자 기능) 수상 실적 등록 함수
 def add_award(mydb):
