@@ -1,6 +1,8 @@
 from modules.club_management import *
 from modules.student_management import *
 from modules.notice_management import *
+from modules.activity_management import select_activities, select_activity_detail
+from modules.budget_management import select_budgets
 import os
 
 # 관리자 로그인
@@ -30,7 +32,8 @@ def department_manager_menu(mydb, manager_id):
     print("1. 동아리 관리")
     print("2. 학생 관리")
     print("3. 공지사항 관리")
-    print("0. 종료\n")
+    print("0. 종료")
+    print("===============================\n")
     
     task = input("원하는 업무를 선택하세요: ").strip()
     
@@ -39,10 +42,11 @@ def department_manager_menu(mydb, manager_id):
       print("============== 동아리 관리 =================")
       print("1. 동아리 생성\t\t\t2. 동아리 목록 조회")
       print("3. 상세 정보 조회\t\t4. 동아리 정보 수정")
-      print("5. 동아리 삭제\t\t6. 수상 실적 등록")
+      print("5. 동아리 삭제\t\t\t6. 수상 실적 등록")
       print("7. 수상 실적 조회\t\t8. 수상 실적 수정")
       print("9. 수상 실적 삭제\t\t10. 활동 정보 조회")
-      print("11. 예산 내역 조회\t\t0. 뒤로가기\n")
+      print("11. 예산 내역 조회\t\t0. 뒤로가기")
+      print("==========================================\n")
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
         create_club(mydb)
@@ -65,7 +69,7 @@ def department_manager_menu(mydb, manager_id):
       elif choice == "10":
         select_activities(mydb)
       elif choice == "11":
-        select_budget(mydb)
+        select_budgets(mydb)
       elif choice == "0":
         # 뒤로가기
         os.system("clear")
@@ -81,7 +85,9 @@ def department_manager_menu(mydb, manager_id):
       print("1. 전체 학생 조회\t\t2. 개별 학생 조회")
       print("3. 학생 직책 변경\t\t 4. 학생 정보 등록")
       print("5. 학생 정보 수정\t\t 6. 학생 정보 삭제")
-      print("0. 뒤로가기\n")
+      print("0. 뒤로가기")
+      print("==========================================\n")
+      
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
         select_all_students(mydb)
@@ -109,7 +115,9 @@ def department_manager_menu(mydb, manager_id):
       print("============== 공지사항 관리 =================")
       print("1. 공지사항 게시\t\t2. 공지사항 조회")
       print("3. 공지사항 상세 조회\t\t4. 공지사항 수정")
-      print("5. 공지사항 삭제\t\t0. 뒤로가기\n")
+      print("5. 공지사항 삭제\t\t0. 뒤로가기")
+      print("==========================================\n")
+      
       choice = input("수행하고자하는 작업을 선택하세요: ").strip()
       if choice == "1":
         post_notice(mydb, manager_id)

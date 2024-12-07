@@ -3,20 +3,27 @@ import os
 # 공지사항 등록 기능 (관리자 기능, 공지사항을 게시할 수 있음)
 def post_notice(mydb, author_id):
   cursor = mydb.cursor(dictionary=True)
-  title = input("공지사항 제목을 입력하세요: ").strip()
-  content = input("공지사항 내용을 입력하세요 (줄바꿈은 '\\n'으로 입력): ").strip()
+  try:
+    title = input("공지사항 제목을 입력하세요: ").strip()
+    content = input("공지사항 내용을 입력하세요: ").strip()
 
-  # 공지사항 등록
-  query = """
-  INSERT INTO Notice (Title, Content, Author_id)
-  VALUES (%s, %s, %s)
-  """
-  cursor.execute(query, (title, content, author_id))
-  mydb.commit()
+    # 공지사항 등록
+    query = """
+    INSERT INTO Notice (Title, Content, Author_id)
+    VALUES (%s, %s, %s)
+    """
+    cursor.execute(query, (title, content, author_id))
+    mydb.commit()
 
-  os.system("clear")
-  print("공지사항이 성공적으로 게시되었습니다.")
-  cursor.close()
+    os.system("clear")
+    print("공지사항이 성공적으로 게시되었습니다.")
+    cursor.close()
+  except ValueError:
+    os.system('clear')
+    print("유효하지 않은 입력입니다. 다시 시도해주세요.")
+  except Exception as e:
+    os.system('clear')
+    print(f"오류 발생: {str(e)}")
 
 # 공지사항 조회 기능 (관리자 기능, 모든 관리자들이 작성한 공지사항 목록을 볼 수 있음, 목록에서는 공지번호, 제목, 작성일자, 작성자 이름(ID))
 def select_notices(mydb):
@@ -65,6 +72,7 @@ def select_notice_detail(mydb):
     print(f"\n내용:\n{notice['Content']}")
     print(f"=========================================\n")
   else:
+    os.system("clear")
     print(f"공지사항 ID {notice_id}가 존재하지 않습니다.")
 
 # 공지사항 수정 기능 (관리자 기능, 특정 공지사항의 제목, 내용을 수정할 수 있음, 작성한 작성자만이 수정 가능!)
@@ -73,7 +81,7 @@ def update_notice(mydb, author_id):
   notice_id = input("수정할 공지사항 ID를 입력하세요: ").strip()
 
   # 공지사항 작성자 확인
-  query = "SELECT Author_id FROM Notice WHERE Notice_id = %s"
+  query = "SELECT * FROM Notice WHERE Notice_id = %s"
   cursor.execute(query, (notice_id,))
   notice = cursor.fetchone()
 
@@ -89,19 +97,26 @@ def update_notice(mydb, author_id):
     cursor.close()
     return
 
-  # 공지사항 수정
-  new_title = input("새로운 제목을 입력하세요: ").strip()
-  new_content = input("새로운 내용을 입력하세요 (줄바꿈은 '\\n'으로 입력): ").strip()
+  try:
+    # 공지사항 수정
+    new_title = input("새로운 제목을 입력하세요 [변경하지 않으려면 엔터]: ").strip() or notice['Title']
+    new_content = input("새로운 내용을 입력하세요 [변경하지 않으려면 엔터]: ").strip() or notice['Content']
 
-  query = """
-  UPDATE Notice SET Title = %s, Content = %s WHERE Notice_id = %s
-  """
-  cursor.execute(query, (new_title, new_content, notice_id))
-  mydb.commit()
+    query = """
+    UPDATE Notice SET Title = %s, Content = %s WHERE Notice_id = %s
+    """
+    cursor.execute(query, (new_title, new_content, notice_id))
+    mydb.commit()
 
-  os.system("clear")
-  print(f"공지사항 ID {notice_id}가 성공적으로 수정되었습니다.")
-  cursor.close()
+    os.system("clear")
+    print(f"공지사항 ID {notice_id}가 성공적으로 수정되었습니다.")
+    cursor.close()
+  except ValueError:
+    os.system('clear')
+    print("유효하지 않은 입력입니다. 다시 시도해주세요.")
+  except Exception as e:
+    os.system('clear')
+    print(f"오류 발생: {str(e)}")
 
 # 공지사항 삭제 기능 (관리자 기능, 특정 공지사항을 삭제하는 기능, 작성한 작성자만 삭제 가능)
 def delete_notice(mydb, author_id):
@@ -109,7 +124,7 @@ def delete_notice(mydb, author_id):
   notice_id = input("삭제할 공지사항 ID를 입력하세요: ").strip()
 
   # 공지사항 작성자 확인
-  query = "SELECT Author_id FROM Notice WHERE Notice_id = %s"
+  query = "SELECT * FROM Notice WHERE Notice_id = %s"
   cursor.execute(query, (notice_id,))
   notice = cursor.fetchone()
 
@@ -125,11 +140,17 @@ def delete_notice(mydb, author_id):
     cursor.close()
     return
 
-  # 공지사항 삭제
-  query = "DELETE FROM Notice WHERE Notice_id = %s"
-  cursor.execute(query, (notice_id,))
-  mydb.commit()
-
-  os.system("clear")
-  print(f"공지사항 ID {notice_id}가 성공적으로 삭제되었습니다.")
+  # 삭제 확인
+  confirm = input(f"공지사항 '{notice['Title']}'를 삭제하시겠습니까? (y/n): ").strip().lower()
+  if confirm == 'y':
+    query = """
+    DELETE FROM Notice WHERE Notice_id = %s
+    """
+    cursor.execute(query, (notice_id,))
+    mydb.commit()
+    os.system('clear')
+    print(f"공지사항 ID {notice_id}가 성공적으로 삭제되었습니다.")
+  else:
+    os.system('clear')
+    print("공지사항 삭제가 취소되었습니다.")
   cursor.close()
